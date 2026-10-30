@@ -1,0 +1,7 @@
+# วิดีโอและไฟล์ใหญ่ ไม่เอาขึ้น GitHub
+*.mp4
+*.mov
+# ไฟล์สำรองข้อมูลร้าน (มีข้อมูลจริง)
+backoffice-*.json
+stock-backup-*.json
+desktop.ini
