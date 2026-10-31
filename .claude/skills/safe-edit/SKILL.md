@@ -13,7 +13,8 @@ Workflow for changing `ระบบหลังร้าน.html` with the fewes
 - Use Edit with exact snippets. Do not rewrite the file.
 
 ## 2. Protect data
-- Keep the localStorage key `stock_v5` and the existing `db` shape (`products`, `bills`, `transactions`, `customers`, `cash`, `transfer`, `credit`, `payable`). Add fields only; never rename or remove them. Old data and Firebase sync depend on it.
+- Keep the localStorage key `stock_v5` and the existing `db` shape (`products`, `bills`, `transactions`, `customers`, `cash`, `transfer`, `credit`, `payable`). Add fields only; never rename or remove them. Old data and the GitHub sync (`data.json` + `images.json`, three-way merge by `id`) depend on it.
+- Every record in those arrays needs a unique `id`; the sync merges by `id` and treats numbers `cash`/`transfer`/`credit`/`payable`/product `qty` as deltas. Never write `db` fields from code that bypasses `save()`.
 - Any change that moves money or stock must also have a reverse path: `delBill` / `delTx` must undo it exactly.
 
 ## 3. Test in the browser

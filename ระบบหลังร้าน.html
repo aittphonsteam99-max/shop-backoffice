@@ -7,10 +7,13 @@
 <meta name="apple-mobile-web-app-title" content="หลังร้าน">
 <meta name="theme-color" content="#F6F6F3">
 <title>ระบบหลังร้าน</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/firebase@9.23.0/firebase-app-compat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/firebase@9.23.0/firebase-database-compat.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -178,7 +181,7 @@ td.r,th.r{font-variant-numeric:tabular-nums}
 
 /* ---------- assistant ---------- */
 .hint{font-size:12px;color:var(--t3);line-height:1.7}
-.hint code{font-family:inherit;background:var(--sunk);padding:1px 6px;border-radius:5px;color:var(--t2)}
+.hint code,.set-help code{font-family:inherit;background:var(--sunk);padding:1px 6px;border-radius:5px;color:var(--t2)}
 .chips{display:flex;gap:7px;flex-wrap:wrap}
 .chip{border:1px solid var(--line2);background:var(--surface);border-radius:99px;padding:6px 12px;font-size:13px;cursor:pointer;color:var(--t2)}
 .chip:hover{color:var(--text);border-color:var(--t3)}
@@ -255,12 +258,25 @@ td.r,th.r{font-variant-numeric:tabular-nums}
   .g3{grid-template-columns:1fr}
   .g2{grid-template-columns:1fr}
   .pos-cart{position:static}
-  .pos-grid{max-height:none}
+  .pos-grid{max-height:none;grid-template-columns:repeat(3,1fr);gap:8px}
+  .tile{padding:9px;gap:4px}.tile .n{font-size:12.5px;min-height:34px}.tile .p{margin-top:0}
   .sum-strip{grid-template-columns:1fr 1fr}
   .card{padding:16px}
   .tw{margin:0 -16px;padding:0 16px}
   .md{border-radius:16px}
+  /* มือถือ: ตัวอักษรช่องกรอก 16px กัน iPhone ซูมเอง, ปุ่มใหญ่พอให้นิ้วกด, เว้นรอยบาก/ขอบจอ */
+  .inp,select.inp,textarea.inp,.cell{font-size:16px}
+  .btn{height:42px}.btn.sm{height:36px}.btn.icon{width:40px;height:40px}
+  .seg button{padding:8px 13px}
+  .stepper button{width:36px;height:36px}.stepper input{height:36px}
+  .mtop{padding-top:env(safe-area-inset-top);height:calc(58px + env(safe-area-inset-top))}
+  .hm{display:none}
+  .chat{max-height:52vh;min-height:200px}
+  .cart-fab.on{display:flex}
+  .page#p-pos{padding-bottom:64px}
 }
+.cart-fab{display:none;position:fixed;left:12px;right:12px;bottom:calc(72px + env(safe-area-inset-bottom));z-index:25;background:var(--text);color:var(--bg);border-radius:14px;padding:10px 10px 10px 16px;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.18);border:0;font-weight:600;cursor:pointer}
+.cart-fab span{opacity:.7;font-weight:400;margin-left:6px}
 @media (max-width:520px){
   .g4{grid-template-columns:1fr 1fr;gap:10px}
   .kpi{padding:13px 14px}.kpi .v{font-size:20px}
@@ -422,7 +438,8 @@ td.r,th.r{font-variant-numeric:tabular-nums}
       </div>
       <div class="pos-grid" id="pos-grid"></div>
     </div>
-    <div class="pos-cart">
+    <button class="cart-fab" id="cart-fab" onclick="$('pos-cart').scrollIntoView({behavior:'smooth',block:'start'})"><div><b id="fab-n"></b><span id="fab-t"></span></div><div class="row" style="gap:6px">ดูตะกร้า / ปิดบิล →</div></button>
+    <div class="pos-cart" id="pos-cart">
       <div class="card">
         <div class="ct"><h3>ตะกร้า</h3><button class="btn ghost sm" onclick="cart=[];renderCart()">ล้าง</button></div>
         <div id="cart-list"></div>
@@ -546,17 +563,27 @@ td.r,th.r{font-variant-numeric:tabular-nums}
       </div>
     </div>
     <div class="card">
-      <div class="ct"><h3>ซิงค์หลายเครื่อง (Firebase)</h3><span class="tag" id="fb-state">ยังไม่เชื่อม</span></div>
-      <p class="sm muted" style="margin-bottom:12px">ใช้ร้านเดียวกันได้ทั้งมือถือและคอม สร้าง Realtime Database ที่ console.firebase.google.com แล้วคัดลอกค่า config มาวาง</p>
+      <div class="ct"><h3>ข้อมูลส่วนกลาง (GitHub)</h3><span class="tag" id="gh-state">ยังไม่เชื่อม</span></div>
+      <p class="sm muted">เก็บข้อมูลร้านไว้ใน repo ส่วนตัวบน GitHub ทุกเครื่อง (คอม มือถือ) ที่เชื่อม repo เดียวกันจะเห็นข้อมูลชุดเดียวกัน และ GitHub เก็บประวัติทุกครั้งที่บันทึกให้ย้อนดูได้</p>
+      <details class="sm set-help" style="margin:10px 0 14px"><summary style="cursor:pointer;font-weight:500">วิธีสร้างโทเคน (ทำครั้งเดียว ใช้ได้ทุกเครื่อง)</summary>
+        <ol style="padding-left:18px;margin-top:8px;line-height:1.9" class="muted">
+          <li>เปิด <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a></li>
+          <li>Token name: <code>shop</code> · Expiration: เลือกนานสุดที่ยอมได้ เช่น 1 ปี</li>
+          <li>Repository access: <b>Only select repositories</b> → เลือก <code>shop-backoffice-data</code></li>
+          <li>Permissions → Repository permissions → <b>Contents: Read and write</b></li>
+          <li>กด Generate token แล้วคัดลอกมาวางช่องด้านล่าง เก็บโทเคนไว้ในที่ปลอดภัยเพื่อใส่ในมือถือด้วย</li>
+        </ol>
+      </details>
       <div class="frm">
-        <div class="fld"><label>apiKey</label><input class="inp" id="fb-apikey" autocomplete="off"></div>
-        <div class="fld"><label>databaseURL</label><input class="inp" id="fb-dburl" autocomplete="off" placeholder="https://xxx.firebasedatabase.app"></div>
         <div class="g g2" style="gap:12px">
-          <div class="fld"><label>projectId</label><input class="inp" id="fb-pid" autocomplete="off"></div>
-          <div class="fld"><label>รหัสร้าน (a-z 0-9)</label><input class="inp" id="fb-shopkey" autocomplete="off" oninput="this.value=this.value.replace(/[^a-zA-Z0-9_-]/g,'')"></div>
+          <div class="fld"><label>ชื่อผู้ใช้ GitHub</label><input class="inp" id="gh-owner" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
+          <div class="fld"><label>ชื่อ repo ข้อมูล</label><input class="inp" id="gh-repo" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="shop-backoffice-data"></div>
         </div>
-        <div class="xs neg hide" id="fb-err" style="white-space:pre-wrap"></div>
-        <div class="row"><button class="btn pri" onclick="connectFirebase()">เชื่อมต่อ</button><button class="btn ghost" onclick="disconnectFirebase()">ตัดการเชื่อมต่อ</button></div>
+        <div class="fld"><label>โทเคน</label><input class="inp" id="gh-token" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="github_pat_…"></div>
+        <div class="fld"><label>ชื่อเครื่องนี้</label><input class="inp" id="gh-device" maxlength="30" placeholder="เช่น คอมที่ร้าน, มือถือแม่"></div>
+        <div class="xs neg hide" id="gh-err" style="white-space:pre-wrap"></div>
+        <div class="row wrap"><button class="btn pri" onclick="ghConnect()">เชื่อมต่อ</button><button class="btn" onclick="ghSync()">ซิงค์ตอนนี้</button><button class="btn ghost" onclick="ghDisconnect()">ตัดการเชื่อมต่อ</button></div>
+        <p class="xs faint">โทเคนเก็บไว้เฉพาะในเครื่องนี้และส่งไปที่ GitHub เท่านั้น ให้สิทธิ์โทเคนแค่ repo ข้อมูลร้านตามขั้นตอนด้านบน</p>
       </div>
     </div>
   </div>
@@ -614,8 +641,9 @@ function normalize(){
   if(!db.settings)db.settings={};
   if(!db.settings.shopName)db.settings.shopName='ร้านของฉัน';
 }
-function persist(){try{localStorage.setItem(SK,JSON.stringify(db));}catch(e){toast('พื้นที่เก็บข้อมูลเต็ม');}}
-function save(){persist();pushToFirebase();}
+function persist(){try{localStorage.setItem(SK,JSON.stringify(db));}catch(e){toast('บันทึกลงเครื่องไม่ได้ (พื้นที่เต็ม หรือเบราว์เซอร์บล็อก) — Export สำรองไว้ก่อน');}}
+let dbVer=0; // เพิ่มทุกครั้งที่บันทึก ใช้รู้ว่ามีการแก้ระหว่างกำลังซิงค์
+function save(){persist();dbVer++;ghQueue();}
 
 /* =========================================================
    UTILS
@@ -1234,6 +1262,7 @@ function cartQ(i,v){const c=cart[i];if(!c)return;c.qty=Math.max(0,r2(v));if(!c.q
 function renderCart(){
   $('cart-list').innerHTML=cart.length?cart.map((c,i)=>`<div class="cart-line"><div style="min-width:0"><div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c.name)}</div><div class="xs faint">@ <input class="cell r" style="width:64px;height:24px;display:inline-block;padding:0 4px" value="${c.price}" inputmode="decimal" onchange="cart[${i}].price=num(this.value);renderCart()"> / ${esc(c.unit)}</div></div><div class="stepper"><button onclick="cartQ(${i},cart[${i}].qty-1)">−</button><input value="${c.qty}" inputmode="decimal" onchange="cartQ(${i},num(this.value))"><button onclick="cartQ(${i},cart[${i}].qty+1)">+</button></div><div class="num r" style="min-width:60px;font-weight:600">${fmt(c.price*c.qty)}</div><button class="btn ghost icon" onclick="cart.splice(${i},1);renderCart()" aria-label="ลบ"><svg class="i"><use href="#i-x"/></svg></button></div>`).join(''):'<div class="empty">ยังไม่มีสินค้าในตะกร้า</div>';
   const t=cart.reduce((a,c)=>a+c.price*c.qty,0),co=cart.reduce((a,c)=>a+c.cost*c.qty,0);
+  $('cart-fab').classList.toggle('on',cart.length>0);$('fab-n').textContent=cart.length+' รายการ';$('fab-t').textContent=baht(t);
   $('cart-total').textContent=baht(t);$('cart-cost').textContent=fmt(co);$('cart-profit').textContent=fmt(t-co);
 }
 function checkout(){
@@ -1255,7 +1284,7 @@ function renderStock(){
   $('stk-sub').textContent=`${db.products.length} รายการ`;
   $('stk-kpi').innerHTML=`<div class="card kpi"><div class="l">มูลค่าสต็อก (ทุน)</div><div class="v num">${baht(val)}</div></div><div class="card kpi"><div class="l">มูลค่าถ้าขายหมด</div><div class="v num">${baht(sv)}</div></div><div class="card kpi"><div class="l">กำไรที่รออยู่ในสต็อก</div><div class="v num pos">${baht(sv-val)}</div><div class="s">${sv?((sv-val)/sv*100).toFixed(1):0}% margin</div></div><div class="card kpi"><div class="l">ต้องดูแล</div><div class="v num">${si.filter(s=>s.status!=='ok').length}<small>รายการ</small></div><div class="s">หมด ${si.filter(s=>s.status==='out').length} · ใกล้หมด ${si.filter(s=>s.status==='low').length}</div></div>`;
   const rows=si.filter(s=>(!q||normName(s.p.name).includes(q))&&(f==='all'||s.status===f)).sort((a,b)=>({out:0,low:1,ok:2}[a.status]-{out:0,low:1,ok:2}[b.status])||a.p.name.localeCompare(b.p.name,'th'));
-  $('stk-table').innerHTML=`<thead><tr><th>สินค้า</th><th class="r">คงเหลือ</th><th class="r">ทุน</th><th class="r">ขาย</th><th class="r">กำไร/หน่วย</th><th class="r">มูลค่าทุน</th><th class="r">ขาย/วัน</th><th class="r">พอขาย</th><th>สถานะ</th></tr></thead><tbody>${rows.length?rows.map(s=>{const p=s.p;return `<tr class="click" onclick="editProduct('${p.id}')"><td><div class="row" style="gap:10px">${thumb(p,'s')}<span style="font-weight:500">${esc(p.name)}</span>${p.hidden?' <span class="tag">ซ่อนจากหน้าร้าน</span>':''}</div></td><td class="r">${fmtQ(p.qty,p.unit)} <span class="faint xs">${unitL(p.unit)}</span></td><td class="r">${fmt(p.cost)}</td><td class="r">${fmt(p.retailPrice)}</td><td class="r ${s.margin<0?'neg':''}">${fmt(s.margin)} <span class="xs faint">${num(p.retailPrice)?(s.margin/num(p.retailPrice)*100).toFixed(0)+'%':''}</span></td><td class="r">${fmt(num(p.cost)*Math.max(0,num(p.qty)))}</td><td class="r faint">${s.avg?fmt(s.avg,1):'–'}</td><td class="r ${s.daysLeft!==null&&s.daysLeft<3?'neg':''}">${s.daysLeft!==null?Math.floor(s.daysLeft)+' วัน':'–'}</td><td>${s.status==='out'?'<span class="tag bad">หมด</span>':s.status==='low'?'<span class="tag wn">ใกล้หมด</span>':'<span class="tag ok">ปกติ</span>'}</td></tr>`;}).join(''):`<tr><td colspan="9"><div class="empty">${db.products.length?'ไม่พบสินค้า':'ยังไม่มีสินค้า'}</div></td></tr>`}</tbody>`;
+  $('stk-table').innerHTML=`<thead><tr><th>สินค้า</th><th class="r">คงเหลือ</th><th class="r hm">ทุน</th><th class="r">ขาย</th><th class="r">กำไร/หน่วย</th><th class="r hm">มูลค่าทุน</th><th class="r hm">ขาย/วัน</th><th class="r">พอขาย</th><th>สถานะ</th></tr></thead><tbody>${rows.length?rows.map(s=>{const p=s.p;return `<tr class="click" onclick="editProduct('${p.id}')"><td><div class="row" style="gap:10px">${thumb(p,'s')}<span style="font-weight:500">${esc(p.name)}</span>${p.hidden?' <span class="tag">ซ่อนจากหน้าร้าน</span>':''}</div></td><td class="r">${fmtQ(p.qty,p.unit)} <span class="faint xs">${unitL(p.unit)}</span></td><td class="r hm">${fmt(p.cost)}</td><td class="r">${fmt(p.retailPrice)}</td><td class="r ${s.margin<0?'neg':''}">${fmt(s.margin)} <span class="xs faint">${num(p.retailPrice)?(s.margin/num(p.retailPrice)*100).toFixed(0)+'%':''}</span></td><td class="r hm">${fmt(num(p.cost)*Math.max(0,num(p.qty)))}</td><td class="r faint hm">${s.avg?fmt(s.avg,1):'–'}</td><td class="r ${s.daysLeft!==null&&s.daysLeft<3?'neg':''}">${s.daysLeft!==null?Math.floor(s.daysLeft)+' วัน':'–'}</td><td>${s.status==='out'?'<span class="tag bad">หมด</span>':s.status==='low'?'<span class="tag wn">ใกล้หมด</span>':'<span class="tag ok">ปกติ</span>'}</td></tr>`;}).join(''):`<tr><td colspan="9"><div class="empty">${db.products.length?'ไม่พบสินค้า':'ยังไม่มีสินค้า'}</div></td></tr>`}</tbody>`;
 }
 function editProduct(id){
   const p=id?db.products.find(x=>x.id===id):{name:'',unit:'ชิ้น',cost:'',retailPrice:'',wholesalePrice:'',qty:'',alert:5};if(!p)return;
@@ -1448,48 +1477,180 @@ function applyTheme(){
 /* เปลี่ยนธีมทันทีที่กด ไม่ต้องกดบันทึก */
 function setTheme(t){themePref=t;try{localStorage.setItem(THEME_KEY,t);}catch(e){}applyTheme();segSet('s-theme',t);}
 function cycleTheme(){const t=applyTheme(),dark=t==='dark'||(t==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches);setTheme(dark?'light':'dark');toast(dark?'โหมดสว่าง':'โหมดมืด');}
-function renderSet(){$('s-name').value=db.settings.shopName;segSet('s-theme',applyTheme());populateFBForm();}
+function renderSet(){$('s-name').value=db.settings.shopName;segSet('s-theme',applyTheme());populateGHForm();}
 function saveShop(){db.settings.shopName=$('s-name').value.trim()||'ร้านของฉัน';save();applyShop();toast('บันทึกแล้ว');}
 function exportJSON(){const b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=`backoffice-${iso(Date.now())}.json`;a.click();URL.revokeObjectURL(u);}
 function importJSON(ev){const f=ev.target.files?.[0];ev.target.value='';if(!f)return;if(!confirm('Import จะแทนที่ข้อมูลทั้งหมดในเครื่องนี้ แน่ใจไหม?'))return;const r=new FileReader();r.onload=e=>{try{const p=JSON.parse(e.target.result);if(!p||typeof p!=='object')throw 0;db=Object.assign({cash:0,transfer:0,credit:0,payable:0},p);normalize();save();applyShop();toast('Import สำเร็จ');go('dash');}catch(err){toast('ไฟล์ไม่ถูกต้อง');}};r.readAsText(f);}
 function wipeAll(){if(!confirm('ล้างข้อมูลทั้งหมด? ควร Export สำรองก่อน'))return;if(prompt('พิมพ์คำว่า ล้าง เพื่อยืนยัน')!=='ล้าง')return;db={cash:0,transfer:0,credit:0,payable:0,products:[],bills:[],transactions:[],customers:[],recurring:[],settings:{shopName:db.settings.shopName}};save();go('dash');}
 
 /* =========================================================
-   FIREBASE SYNC (โครงสร้างเดียวกับเวอร์ชันเดิม)
+   GITHUB SYNC — ข้อมูลส่วนกลางเก็บเป็นไฟล์ data.json ใน repo ส่วนตัว
+   ทุกครั้งที่ซิงค์: ดึงของบน GitHub → รวมแบบ 3 ทาง (base = ครั้งล่าสุดที่ซิงค์ตรงกัน) → ส่งกลับ
+   ตัวเลข (เงิน, จำนวนสต็อก) รวมจาก "ส่วนต่าง" ของแต่ละเครื่อง จึงขายพร้อมกัน 2 เครื่องได้โดยยอดไม่หาย
    ========================================================= */
-const FB_CFG_KEY='fb_config_v2';
-let fbApp=null,fbDb=null,fbRef=null,fbConnected=false,syncT=null;
-const getFB=()=>{try{return JSON.parse(localStorage.getItem(FB_CFG_KEY)||'null');}catch(e){return null;}};
-function setSync(state,label){$('sync-dot').className='dot '+(state||'');$('sync-label').textContent=label;const t=$('fb-state');if(t){t.textContent=label;t.className='tag '+(state==='ok'?'ok':state==='err'?'bad':'');}}
-function populateFBForm(){const c=getFB();if(!c)return;$('fb-apikey').value=c.apiKey||'';$('fb-dburl').value=c.databaseURL||'';$('fb-pid').value=c.projectId||'';$('fb-shopkey').value=c.shopKey||'';}
-function fbErr(m){const e=$('fb-err');e.textContent=m;e.classList.toggle('hide',!m);if(m)setSync('err','เชื่อมต่อไม่ได้');}
-function connectFirebase(cfg){
-  if(typeof firebase==='undefined'){fbErr('โหลด Firebase ไม่ได้ — ต้องต่ออินเทอร์เน็ต');return;}
-  const v=k=>(cfg?.[k]||$({apiKey:'fb-apikey',databaseURL:'fb-dburl',projectId:'fb-pid',shopKey:'fb-shopkey'}[k])?.value||'').trim();
-  const apiKey=v('apiKey'),databaseURL=v('databaseURL').replace(/\/$/,''),projectId=v('projectId'),shopKey=v('shopKey').replace(/[^a-zA-Z0-9_-]/g,'_');
-  if(!apiKey||!databaseURL||!projectId||!shopKey){fbErr('กรอกให้ครบทุกช่อง');return;}
-  fbErr('');setSync('spin','กำลังเชื่อมต่อ…');
-  try{
-    if(fbApp){try{fbRef?.off();fbApp.delete();}catch(e){}}
-    const ex=firebase.apps.find(a=>a.name==='stockapp');if(ex)ex.delete();
-    fbApp=firebase.initializeApp({apiKey,databaseURL,projectId,appId:cfg?.appId||'1:000000000000:web:000000000000000000000000'},'stockapp');
-    fbDb=firebase.database(fbApp);fbRef=fbDb.ref('shops/'+shopKey);
-    localStorage.setItem(FB_CFG_KEY,JSON.stringify({apiKey,databaseURL,projectId,shopKey,appId:cfg?.appId||''}));
-    fbDb.ref('.info/connected').on('value',s=>{fbConnected=s.val()===true;setSync(fbConnected?'ok':'',fbConnected?'ซิงค์แล้ว':'รอสัญญาณ…');});
-    fbRef.child('_ping').set(Date.now()).then(()=>{
-      fbRef.on('value',snap=>{
-        const r=snap.val();if(!r||!r.products){pushToFirebase();return;}
-        ['cash','transfer','credit','payable'].forEach(k=>{if(typeof r[k]==='number')db[k]=r[k];});
-        ['products','bills','transactions','customers','recurring'].forEach(k=>{db[k]=Array.isArray(r[k])?r[k]:[];});
-        if(r.settings)db.settings={...db.settings,...r.settings};
-        normalize();persist();applyShop();renderPage();
-      });
-      if(!cfg)toast('เชื่อมต่อแล้ว');
-    }).catch(e=>fbErr(e.code==='PERMISSION_DENIED'?'ถูกปฏิเสธสิทธิ์ — ตั้ง Rules เป็น { "rules": { ".read": true, ".write": true } }':'เขียนข้อมูลไม่ได้: '+e.message));
-  }catch(e){fbErr(e.message);}
+const GH_KEY='gh_sync_v1',GH_BASE='gh_base_v1',GH_PATH='data.json',GH_IMG='images.json';
+let gh=null,ghBusy=false,ghDirty=false,ghTimer=null,ghBaseMem=null;
+const loadGH=()=>{try{return JSON.parse(localStorage.getItem(GH_KEY)||'null');}catch(e){return null;}};
+function setSync(state,label){
+  $('sync-dot').className='dot '+(state||'');$('sync-label').textContent=label;
+  const t=$('gh-state');if(t){t.textContent=label;t.className='tag '+(state==='ok'?'ok':state==='err'?'bad':'');}
 }
-function disconnectFirebase(){try{fbRef?.off();fbApp?.delete();}catch(e){}fbApp=fbDb=fbRef=null;fbConnected=false;try{localStorage.removeItem(FB_CFG_KEY);}catch(e){}setSync('','เก็บในเครื่องนี้');}
-function pushToFirebase(){if(!fbRef||!fbConnected)return;clearTimeout(syncT);syncT=setTimeout(()=>{setSync('spin','กำลังบันทึก…');fbRef.set(JSON.parse(JSON.stringify(db))).then(()=>setSync('ok','ซิงค์แล้ว')).catch(()=>setSync('err','ซิงค์ไม่ได้'));},1000);}
+function ghErr(m){const e=$('gh-err');if(e){e.textContent=m;e.classList.toggle('hide',!m);}if(m)setSync('err','ซิงค์ไม่ได้');}
+function populateGHForm(){const c=gh||loadGH()||{};$('gh-owner').value=c.owner||'aittphonsteam99-max';$('gh-repo').value=c.repo||'shop-backoffice-data';$('gh-token').value=c.token||'';$('gh-device').value=c.device||'';}
+
+/* ---- เครือข่าย ---- */
+const toB64=s=>{const b=new TextEncoder().encode(s);let bin='';for(let i=0;i<b.length;i+=0x8000)bin+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(bin);};
+const fromB64=s=>new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\s/g,'')),c=>c.charCodeAt(0)));
+function ghApi(c,path,opt={}){
+  return fetch(`https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}${path}`,{cache:'no-store',...opt,
+    headers:{Authorization:'Bearer '+c.token,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28',...(opt.body?{'Content-Type':'application/json'}:{})}});
+}
+function ghFail(r){
+  const m={401:'โทเคนไม่ถูกต้องหรือหมดอายุ — สร้างโทเคนใหม่',403:'โทเคนไม่มีสิทธิ์เขียน — ต้องให้สิทธิ์ Contents: Read and write หรือเรียกใช้ถี่เกินไป',404:'ไม่พบ repo — ตรวจชื่อผู้ใช้/ชื่อ repo และเลือก repo นี้ตอนสร้างโทเคน'}[r.status];
+  return new Error(m||'GitHub ตอบกลับ '+r.status);
+}
+async function ghGet(c,path){
+  const r=await ghApi(c,'/contents/'+path);
+  if(r.status===404)return{data:null,sha:null};
+  if(!r.ok)throw ghFail(r);
+  const j=await r.json();let content=j.content;
+  if(!content||j.encoding!=='base64'){const b=await ghApi(c,'/git/blobs/'+j.sha);if(!b.ok)throw ghFail(b);content=(await b.json()).content;} // ไฟล์ใหญ่กว่า 1MB
+  return{data:JSON.parse(fromB64(content)),sha:j.sha};
+}
+async function ghPut(c,path,data,sha){
+  const body={message:'ซิงค์จาก '+(c.device||'เครื่องไม่มีชื่อ'),content:toB64(JSON.stringify(data))};if(sha)body.sha=sha;
+  const r=await ghApi(c,'/contents/'+path,{method:'PUT',body:JSON.stringify(body)});
+  if(r.status===409||r.status===422)return null; // มีเครื่องอื่นบันทึกก่อน → ดึงใหม่แล้วรวมอีกรอบ
+  if(!r.ok)throw ghFail(r);
+  return(await r.json()).content.sha;
+}
+
+/* ---- รวมข้อมูล 3 ทาง ----
+   data.json เก็บแบบ "slim": รูปสินค้าเหลือแค่ imgSig ส่วนรูปจริงอยู่ใน images.json
+   ซึ่งอัปโหลดเฉพาะตอนรูปเปลี่ยน ประวัติใน repo จึงไม่โตทุกครั้งที่ขายของ */
+const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+const imgSig=s=>s?s.length+':'+s.slice(-24):'';
+const sigOf=o=>o.imgSig??imgSig(o.img);
+const clone=o=>JSON.parse(JSON.stringify(o));
+function slim(d){const c=clone(d);(c.products||[]).forEach(p=>{if(p.img){p.imgSig=imgSig(p.img);delete p.img;}});return c;}
+function mergeObj(b,l,r,numKeys){
+  if(!b)return l;
+  const out={...r};
+  new Set([...Object.keys(l),...Object.keys(r)]).forEach(k=>{
+    if(k==='img'||k==='imgSig')return;
+    if(numKeys.includes(k))out[k]=Math.round((num(r[k])+num(l[k])-num(b[k]))*1000)/1000;
+    else if(!same(l[k],b[k])){if(l[k]===undefined)delete out[k];else out[k]=l[k];}
+  });
+  if(sigOf(l)!==sigOf(b))['img','imgSig'].forEach(k=>{if(l[k]===undefined)delete out[k];else out[k]=l[k];}); // รูปเปลี่ยนในเครื่องนี้
+  return out;
+}
+function mergeArr(B,L,R,numKeys){
+  const bm=new Map((B||[]).map(x=>[x.id,x])),lm=new Map(L.map(x=>[x.id,x])),rm=new Map(R.map(x=>[x.id,x])),out=[];
+  new Set([...R.map(x=>x.id),...L.map(x=>x.id)]).forEach(id=>{
+    const b=bm.get(id),l=lm.get(id),r=rm.get(id);
+    if(l&&r)out.push(mergeObj(b,l,r,numKeys));
+    else if(l&&!b)out.push(l);      // เพิ่มใหม่ในเครื่องนี้
+    else if(r&&!b)out.push(r);      // เพิ่มใหม่จากเครื่องอื่น
+    // มีใน base แต่หายไปฝั่งใดฝั่งหนึ่ง = ถูกลบ → ไม่ใส่
+  });
+  return out;
+}
+function mergeDb(B,L,R){
+  B=B||{};const m={...R};
+  ['cash','transfer','credit','payable'].forEach(k=>{m[k]=r2(num(R[k])+num(L[k])-num(B[k]));});
+  ['products','bills','transactions','customers'].forEach(k=>{m[k]=mergeArr(B[k],L[k]||[],R[k]||[],k==='products'?['qty']:[]);});
+  m.settings={...(R.settings||{})};
+  Object.keys(L.settings||{}).forEach(k=>{if(!same(L.settings[k],(B.settings||{})[k]))m.settings[k]=L.settings[k];});
+  return m;
+}
+function loadBase(){if(ghBaseMem)return ghBaseMem;try{return JSON.parse(localStorage.getItem(GH_BASE)||'null');}catch(e){return null;}}
+function saveBase(d){ghBaseMem=slim(d);try{localStorage.setItem(GH_BASE,JSON.stringify(ghBaseMem));}catch(e){}}
+
+/* ---- ซิงค์ ---- */
+let ghSha=null,ghVer=-1,ghStaleUI=false; // sha/เวอร์ชันตอนซิงค์ล่าสุด: ถ้าไม่เปลี่ยนทั้งสองฝั่ง ข้ามได้เลย
+const isTyping=()=>/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName||'');
+function ghQueue(){if(!gh)return;setSync('spin','รอซิงค์…');clearTimeout(ghTimer);ghTimer=setTimeout(ghSync,2000);}
+function imgChangedLocally(L){const B=new Map(((loadBase()||{}).products||[]).map(p=>[p.id,p.imgSig||'']));return L.products.some(p=>p.imgSig&&B.get(p.id)!==p.imgSig);}
+async function ghImages(c,m,localImg){
+  // อัปโหลดรูปในเครื่องนี้ที่ images.json ยังไม่มี (ส่งเฉพาะรูปที่เปลี่ยน)
+  const want=new Map((m.products||[]).filter(p=>p.imgSig).map(p=>[p.id,p.imgSig]));
+  const upload=[...want].filter(([id,s])=>localImg.has(id)&&imgSig(localImg.get(id))===s);
+  for(let i=0;i<3;i++){
+    const {data:I,sha}=await ghGet(c,GH_IMG),map=I||{};
+    const stale=upload.filter(([id,s])=>imgSig(map[id])!==s);
+    if(!stale.length)break;
+    stale.forEach(([id])=>{map[id]=localImg.get(id);});
+    Object.keys(map).forEach(id=>{if(!want.has(id))delete map[id];}); // รูปของสินค้าที่ลบแล้ว
+    if(await ghPut(c,GH_IMG,map,sha))break;
+  }
+}
+async function ghSync(){
+  if(!gh){ghErr('ยังไม่ได้เชื่อมต่อ GitHub');return;}
+  if(ghBusy){ghDirty=true;return;}
+  ghBusy=true;ghDirty=false;clearTimeout(ghTimer);setSync('spin','กำลังซิงค์…');
+  const c=gh;
+  try{
+    let first=await ghGet(c,GH_PATH);
+    if(first.data&&first.sha===ghSha&&dbVer===ghVer){setSync('ok','ซิงค์แล้ว '+tStr(Date.now()));return;} // ไม่มีอะไรเปลี่ยน
+    const ver=dbVer,L=slim(db),localImg=new Map(db.products.filter(p=>p.img).map(p=>[p.id,p.img]));
+    let merged=null,sha=null;
+    for(let i=0;i<4&&!merged;i++){
+      const {data:R,sha:rs}=i?await ghGet(c,GH_PATH):first;
+      const m=R?mergeDb(loadBase(),L,R):L;
+      if(i===0&&imgChangedLocally(L))await ghImages(c,m,localImg); // ส่งรูปก่อน เครื่องอื่นจะได้หาเจอ
+      if(R&&same(m,R)){merged=m;sha=rs;break;}       // ไม่มีอะไรใหม่ให้ส่ง
+      const ns=await ghPut(c,GH_PATH,m,rs);if(ns){merged=m;sha=ns;}
+    }
+    if(!merged)throw new Error('มีหลายเครื่องบันทึกพร้อมกัน ลองใหม่อีกครั้ง');
+    if(gh!==c)return;                             // ถูกตัดการเชื่อมต่อระหว่างซิงค์
+    const changed=!same(merged,L);
+    // เติมรูปกลับ: ใช้รูปในเครื่องถ้าตรงกัน ไม่งั้นโหลดจาก images.json
+    const full=clone(merged);
+    const needRemote=full.products.some(p=>p.imgSig&&imgSig(localImg.get(p.id))!==p.imgSig);
+    const imgs=needRemote?(await ghGet(c,GH_IMG)).data||{}:{};
+    full.products.forEach(p=>{if(p.imgSig){const s=p.imgSig,loc=localImg.get(p.id);p.img=imgSig(loc)===s?loc:imgSig(imgs[p.id])===s?imgs[p.id]:'';}delete p.imgSig;});
+    saveBase(merged);ghSha=sha;ghVer=ver;
+    // ถ้าระหว่างซิงค์มีการแก้ในเครื่องนี้ เอาการแก้นั้นมารวมด้วยแล้วซิงค์อีกรอบ
+    if(dbVer!==ver){db=mergeDb(L,db,full);db.products.forEach(p=>delete p.imgSig);ghDirty=true;}else db=full;
+    normalize();persist();
+    if(changed||ghStaleUI){if(isTyping())ghStaleUI=true;else{ghStaleUI=false;applyShop();renderPage();}} // ไม่วาดหน้าใหม่ระหว่างพิมพ์
+    setSync('ok','ซิงค์แล้ว '+tStr(Date.now()));ghErr('');
+  }catch(e){
+    console.error(e);
+    const offline=!navigator.onLine||e instanceof TypeError; // fetch โยน TypeError เมื่อเน็ตหลุด
+    if(offline){setSync('err','ออฟไลน์ · รอซิงค์');const el=$('gh-err');if(el){el.textContent='ไม่มีอินเทอร์เน็ต — ข้อมูลบันทึกไว้ในเครื่องแล้ว จะซิงค์ให้เองเมื่อกลับมาออนไลน์';el.classList.remove('hide');}}
+    else ghErr(e.message);
+  }finally{ghBusy=false;if(ghDirty)ghQueue();}
+}
+const hasData=d=>d.products.length||d.bills.length||d.transactions.length||d.customers.length||d.cash||d.transfer||d.credit||d.payable||d.settings.shopName!=='ร้านของฉัน';
+async function ghConnect(){
+  const c={owner:$('gh-owner').value.trim(),repo:$('gh-repo').value.trim()||'shop-backoffice-data',token:$('gh-token').value.trim(),device:$('gh-device').value.trim()};
+  if(!c.owner||!c.token){ghErr('ใส่ชื่อผู้ใช้และโทเคนก่อน');return;}
+  ghErr('');setSync('spin','กำลังเชื่อมต่อ…');
+  try{
+    const r=await ghApi(c,'');if(!r.ok)throw ghFail(r);
+    const repo=await r.json();
+    if(!repo.private&&!confirm(`repo “${c.repo}” เป็นสาธารณะ ใครก็เห็นข้อมูลร้านได้\nควรใช้ repo ส่วนตัว ยังจะใช้ต่อไหม?`)){setSync('','เก็บในเครื่องนี้');return;}
+    const prev=gh||loadGH();
+    if(!prev||prev.owner!==c.owner||prev.repo!==c.repo){ // repo ใหม่ → base เก่าใช้รวมไม่ได้
+      ghBaseMem=null;ghSha=null;ghVer=-1;try{localStorage.removeItem(GH_BASE);}catch(e){}
+    }
+    const {data:R}=await ghGet(c,GH_PATH);
+    if(R&&hasData(db)&&!loadBase()){
+      if(confirm('บน GitHub มีข้อมูลร้านอยู่แล้ว\n\nตกลง = รวมข้อมูลในเครื่องนี้เข้าไปด้วย (ยอดเงินใช้ของบน GitHub)\nยกเลิก = ใช้ข้อมูลบน GitHub แทนข้อมูลในเครื่องนี้ (ระบบจะดาวน์โหลดไฟล์สำรองของเครื่องนี้ไว้ให้ก่อน)')){
+        saveBase({cash:db.cash,transfer:db.transfer,credit:db.credit,payable:db.payable,settings:clone(db.settings)}); // base แบบนี้ = รวมรายการ แต่ไม่บวกยอดเงินซ้ำ
+      }else{exportJSON();db=R;normalize();persist();saveBase(R);}
+    }else if(R&&!loadBase()&&!hasData(db)){db=R;normalize();persist();saveBase(R);}
+    gh=c;try{localStorage.setItem(GH_KEY,JSON.stringify(c));}catch(e){}
+    await ghSync();toast('เชื่อมต่อ GitHub แล้ว');
+  }catch(e){ghErr(e.message);}
+}
+function ghDisconnect(){
+  if(gh&&!confirm('ตัดการเชื่อมต่อ? ข้อมูลในเครื่องนี้ยังอยู่ แต่จะไม่ซิงค์กับเครื่องอื่นแล้ว'))return;
+  gh=null;ghBaseMem=null;ghSha=null;ghVer=-1;clearTimeout(ghTimer);
+  try{localStorage.removeItem(GH_KEY);localStorage.removeItem(GH_BASE);}catch(e){}
+  setSync('','เก็บในเครื่องนี้');ghErr('');
+}
 
 /* =========================================================
    STOREFRONT — หน้าที่ลูกค้าเห็น (รูป ชื่อ ราคา ไม่มีจำนวนคงเหลือ)
@@ -1609,7 +1770,15 @@ $('pos-q').addEventListener('keydown',e=>{if(e.key!=='Enter')return;const q=norm
 $('a-text').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();sendChat();}});
 $('a-text').addEventListener('input',autoGrow);
 go('dash');
-setTimeout(()=>{const c=getFB();if(c&&c.apiKey&&c.databaseURL&&c.shopKey)connectFirebase(c);},400);
+if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+gh=loadGH();
+if(gh){ghSync();}
+// มือถือ: ซิงค์เมื่อกลับมาเปิดแอป / อินเทอร์เน็ตกลับมา / ทุก 45 วินาทีระหว่างเปิดใช้
+document.addEventListener('visibilitychange',()=>{if(gh&&document.visibilityState==='visible')ghSync();});
+addEventListener('online',()=>{if(gh)ghSync();});
+setInterval(()=>{if(gh&&document.visibilityState==='visible'&&!ghBusy)ghSync();},20000); // ถ้าไม่มีอะไรเปลี่ยน ใช้แค่การเรียก GitHub 1 ครั้ง
+document.addEventListener('focusout',()=>setTimeout(()=>{if(ghStaleUI&&!isTyping()){ghStaleUI=false;applyShop();renderPage();}},0));
+try{if(!gh&&localStorage.getItem('fb_config_v2')){setSync('err','ต้องตั้งค่าซิงค์ใหม่');setTimeout(()=>toast('ระบบซิงค์เปลี่ยนจาก Firebase เป็น GitHub แล้ว — ไปที่ ตั้งค่า เพื่อเชื่อมต่อใหม่'),800);}}catch(e){}
 </script>
 </body>
 </html>
