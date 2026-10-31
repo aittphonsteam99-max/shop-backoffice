@@ -16,39 +16,49 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+/* ธีมเขียวอ่อนไล่เฉด: พื้นหลังไล่จากเขียวมิ้นต์จางไปเขียวอ่อน การ์ดขาวโปร่ง */
 :root{
-  --bg:#F6F6F3;--surface:#FFFFFF;--sunk:#F1F1EC;--line:#E8E7E1;--line2:#D9D8D0;
-  --text:#1B1B18;--t2:#66655E;--t3:#9D9C94;
-  --acc:#1E7A5A;--acc-soft:#E8F3EE;--acc-ink:#135A41;
-  --neg:#C2473B;--neg-soft:#FBEDEB;
-  --warn:#AD7418;--warn-soft:#FBF2E1;
-  --info:#3466A8;--info-soft:#EAF0F9;
-  --shadow:0 1px 2px rgba(20,20,10,.04),0 2px 8px rgba(20,20,10,.03);
-  --r:14px;--rs:9px;
+  --bg:#EEF8F1;--surface:#FFFFFF;--sunk:#EAF5EE;--line:#DAEBE0;--line2:#C3DDCC;
+  --text:#14261B;--t2:#55705F;--t3:#8BA596;
+  --acc:#1F9D63;--acc-soft:#E0F4E8;--acc-ink:#10683E;
+  --neg:#D2483D;--neg-soft:#FDECEA;
+  --warn:#B9770F;--warn-soft:#FDF3DF;
+  --info:#2F7FD1;--info-soft:#E7F0FB;
+  --grad:linear-gradient(165deg,#F7FDF9 0%,#E8F7EE 38%,#D5EFDF 72%,#C4E8D2 100%);
+  --hero:linear-gradient(135deg,#178A55 0%,#2FAE72 50%,#86D6A6 100%);
+  --glass:rgba(255,255,255,.62);
+  --shadow:0 1px 2px rgba(16,70,40,.05),0 4px 14px rgba(16,70,40,.06);
+  --r:16px;--rs:10px;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#141413;--surface:#1C1C1A;--sunk:#232320;--line:#2D2D2A;--line2:#3A3A36;
-  --text:#ECEBE6;--t2:#A6A59E;--t3:#76756F;
-  --acc:#4FB68F;--acc-soft:#1D2E27;--acc-ink:#8BD9BA;
-  --neg:#E57A6E;--neg-soft:#35201D;--warn:#E0A54A;--warn-soft:#33291A;--info:#7BA6E0;--info-soft:#1D2633;
+  --bg:#0D1611;--surface:#15211A;--sunk:#1B2A21;--line:#233529;--line2:#2E4637;
+  --text:#E4F3E9;--t2:#9BB8A6;--t3:#6D897A;
+  --acc:#4FCB8A;--acc-soft:#173325;--acc-ink:#9DE8BF;
+  --neg:#EF7D70;--neg-soft:#3A1F1C;--warn:#E8AE4E;--warn-soft:#352A17;--info:#7FB0EA;--info-soft:#192636;
+  --grad:linear-gradient(165deg,#0B140F 0%,#0F1D15 45%,#14291D 100%);
+  --hero:linear-gradient(135deg,#126B42 0%,#1F9460 55%,#3FB97C 100%);
+  --glass:rgba(21,33,26,.7);
   --shadow:none;
 }}
 :root[data-theme="dark"]{
-  --bg:#141413;--surface:#1C1C1A;--sunk:#232320;--line:#2D2D2A;--line2:#3A3A36;
-  --text:#ECEBE6;--t2:#A6A59E;--t3:#76756F;
-  --acc:#4FB68F;--acc-soft:#1D2E27;--acc-ink:#8BD9BA;
-  --neg:#E57A6E;--neg-soft:#35201D;--warn:#E0A54A;--warn-soft:#33291A;--info:#7BA6E0;--info-soft:#1D2633;
+  --bg:#0D1611;--surface:#15211A;--sunk:#1B2A21;--line:#233529;--line2:#2E4637;
+  --text:#E4F3E9;--t2:#9BB8A6;--t3:#6D897A;
+  --acc:#4FCB8A;--acc-soft:#173325;--acc-ink:#9DE8BF;
+  --neg:#EF7D70;--neg-soft:#3A1F1C;--warn:#E8AE4E;--warn-soft:#352A17;--info:#7FB0EA;--info-soft:#192636;
+  --grad:linear-gradient(165deg,#0B140F 0%,#0F1D15 45%,#14291D 100%);
+  --hero:linear-gradient(135deg,#126B42 0%,#1F9460 55%,#3FB97C 100%);
+  --glass:rgba(21,33,26,.7);
   --shadow:none;
 }
-html{-webkit-text-size-adjust:100%}
-body{font-family:'IBM Plex Sans Thai',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14.5px;line-height:1.55;min-height:100vh}
+html{-webkit-text-size-adjust:100%;background:var(--bg)}
+body{font-family:'IBM Plex Sans Thai',system-ui,sans-serif;background:var(--grad) fixed;background-color:var(--bg);color:var(--text);font-size:14.5px;line-height:1.55;min-height:100vh}
 button,input,select,textarea{font:inherit;color:inherit}
 .num{font-variant-numeric:tabular-nums}
 svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 
 /* ---------- shell ---------- */
 .app{display:flex;min-height:100vh}
-.side{width:228px;flex-shrink:0;border-right:1px solid var(--line);padding:22px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:2px;background:var(--bg)}
+.side{width:228px;flex-shrink:0;border-right:1px solid var(--line);padding:22px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:2px;background:var(--glass);backdrop-filter:blur(14px)}
 .logo{display:flex;align-items:center;gap:10px;padding:4px 10px 22px}
 .logo-mark{width:30px;height:30px;border-radius:9px;background:var(--text);color:var(--bg);display:grid;place-items:center;font-weight:700;font-size:15px}
 .logo-name{font-weight:600;font-size:15px;line-height:1.2}
@@ -95,6 +105,20 @@ main{flex:1;min-width:0;padding:30px 36px 60px}
 .btn:hover{background:var(--sunk)}
 .btn:active{transform:scale(.98)}
 .btn.pri{background:var(--text);color:var(--bg);border-color:var(--text)}
+/* สีปุ่มแยกตามหน้าที่: ขาย=เขียว ซื้อเข้า=ฟ้า รายจ่าย=ส้มแดง เลขา=ม่วง หน้าร้าน=ส้มทอง ลูกค้า=เขียวน้ำทะเล เสียง=ชมพูแดง */
+.btn:is(.c-sell,.c-buy,.c-exp,.c-ai,.c-shop,.c-cust,.c-mic){color:#fff;border-color:transparent;box-shadow:0 2px 8px var(--bsh,rgba(0,0,0,.12))}
+.btn:is(.c-sell,.c-buy,.c-exp,.c-ai,.c-shop,.c-cust,.c-mic):hover{filter:brightness(1.06)}
+.btn.c-sell{background:linear-gradient(135deg,#1F9D63,#33B977);--bsh:rgba(31,157,99,.3)}
+.btn.c-buy{background:linear-gradient(135deg,#2F7FD1,#4C9BEA);--bsh:rgba(47,127,209,.3)}
+.btn.c-exp{background:linear-gradient(135deg,#E0644F,#F08A5D);--bsh:rgba(224,100,79,.3)}
+.btn.c-ai{background:linear-gradient(135deg,#7457D6,#9A7BF0);--bsh:rgba(116,87,214,.3)}
+.btn.c-shop{background:linear-gradient(135deg,#D98A1E,#F0B23F);--bsh:rgba(217,138,30,.3)}
+.btn.c-cust{background:linear-gradient(135deg,#149A9A,#2DBDB5);--bsh:rgba(20,154,154,.3)}
+.btn.c-mic{background:linear-gradient(135deg,#E0465E,#F27084);--bsh:rgba(224,70,94,.3)}
+.btn.c-mic.rec{animation:recp 1.1s ease-in-out infinite}
+@keyframes recp{0%,100%{box-shadow:0 0 0 0 rgba(224,70,94,.5)}50%{box-shadow:0 0 0 8px rgba(224,70,94,0)}}
+/* ไอคอนเมนูแต่ละหน้าสีต่างกัน */
+[data-p="dash"] svg{color:#1F9D63}[data-p="asst"] svg{color:#7457D6}[data-p="pos"] svg{color:#2BA36A}[data-p="shop"] svg{color:#D98A1E}[data-p="stock"] svg{color:#2F7FD1}[data-p="money"] svg{color:#E0644F}[data-p="cust"] svg{color:#149A9A}[data-p="set"] svg{color:var(--t2)}
 .btn.pri:hover{opacity:.88;background:var(--text)}
 .btn.acc{background:var(--acc);border-color:var(--acc);color:#fff}
 .btn.ghost{border-color:transparent;background:transparent;color:var(--t2)}
@@ -137,8 +161,9 @@ select.inp{appearance:none;-webkit-appearance:none;padding-right:30px;background
 .kpi .v small{font-size:14px;font-weight:500;color:var(--t3);margin-left:2px}
 .kpi .s{font-size:12px;color:var(--t3);margin-top:6px;display:flex;gap:8px;flex-wrap:wrap}
 .delta{font-weight:600;font-size:12px}
-.kpi.hl{background:var(--text);color:var(--bg);border-color:var(--text)}
-.kpi.hl .l,.kpi.hl .s,.kpi.hl .v small{color:color-mix(in srgb,var(--bg) 62%,transparent)}
+.kpi.hl{background:var(--hero);color:#fff;border-color:transparent;box-shadow:0 8px 24px rgba(23,138,85,.25)}
+.kpi.hl .l,.kpi.hl .s,.kpi.hl .v small{color:rgba(255,255,255,.82)}
+.kpi.hl .delta{color:#fff}
 
 /* ---------- brief ---------- */
 .brief{display:flex;gap:14px;align-items:flex-start}
@@ -274,6 +299,7 @@ td.r,th.r{font-variant-numeric:tabular-nums}
   .chat{max-height:52vh;min-height:200px}
   .cart-fab.on{display:flex}
   .page#p-pos{padding-bottom:64px}
+  .toast{bottom:auto;top:calc(66px + env(safe-area-inset-top));transform:translateX(-50%) translateY(-12px)} /* มือถือ: ขึ้นด้านบน ไม่ให้ถูกแถบล่าง/ตะกร้าบัง */
 }
 .cart-fab{display:none;position:fixed;left:12px;right:12px;bottom:calc(72px + env(safe-area-inset-bottom));z-index:25;background:var(--text);color:var(--bg);border-radius:14px;padding:10px 10px 10px 16px;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.18);border:0;font-weight:600;cursor:pointer}
 .cart-fab span{opacity:.7;font-weight:400;margin-left:6px}
@@ -313,8 +339,8 @@ td.r,th.r{font-variant-numeric:tabular-nums}
   <div class="ph">
     <div><h1 id="greet">ภาพรวมวันนี้</h1><p id="today-label"></p></div>
     <div class="row">
-      <button class="btn" onclick="go('asst','buy')"><svg class="i"><use href="#i-box"/></svg>รับของเข้า</button>
-      <button class="btn pri" onclick="go('pos')"><svg class="i"><use href="#i-plus"/></svg>ขายสินค้า</button>
+      <button class="btn c-buy" onclick="go('asst','buy')"><svg class="i"><use href="#i-box"/></svg>รับของเข้า</button>
+      <button class="btn c-sell" onclick="go('pos')"><svg class="i"><use href="#i-plus"/></svg>ขายสินค้า</button>
     </div>
   </div>
 
@@ -384,7 +410,8 @@ td.r,th.r{font-variant-numeric:tabular-nums}
         <div class="chat" id="chat"></div>
         <div class="composer">
           <textarea class="inp" id="a-text" rows="2" spellcheck="false" placeholder="พิมพ์หรือวางรายการ… (Ctrl+Enter = ส่ง)"></textarea>
-          <button class="btn pri icon" style="height:46px;width:46px" onclick="sendChat()" aria-label="ส่ง"><svg class="i"><use href="#i-send"/></svg></button>
+          <button class="btn c-mic icon" id="mic-btn" style="height:46px;width:46px;flex-shrink:0" onclick="toggleMic()" aria-label="สั่งด้วยเสียง" title="สั่งด้วยเสียง"><svg class="i"><use href="#i-mic"/></svg></button>
+          <button class="btn c-ai icon" style="height:46px;width:46px;flex-shrink:0" onclick="sendChat()" aria-label="ส่ง"><svg class="i"><use href="#i-send"/></svg></button>
         </div>
         <div class="row wrap mt" style="justify-content:space-between;gap:10px">
           <div class="row xs muted" style="gap:8px">ถ้าไม่บอกว่าซื้อหรือขาย ถือว่า<div class="seg" id="a-mode"><button class="on" data-v="buy">ซื้อเข้า</button><button data-v="sell">ขายออก</button></div></div>
@@ -457,7 +484,7 @@ td.r,th.r{font-variant-numeric:tabular-nums}
           <div class="sp"></div>
           <div class="r sm"><div class="faint">ทุน <span class="num" id="cart-cost">0</span></div><div class="pos">กำไร <span class="num" id="cart-profit">0</span></div></div>
         </div>
-        <button class="btn acc lg full mt" onclick="checkout()">ปิดบิล</button>
+        <button class="btn c-sell lg full mt" onclick="checkout()">ปิดบิล</button>
       </div>
     </div>
   </div>
@@ -467,7 +494,7 @@ td.r,th.r{font-variant-numeric:tabular-nums}
 <section class="page" id="p-shop">
   <div class="ph">
     <div><h1>หน้าร้าน</h1><p>หน้าที่ลูกค้าเห็น มีรูป ชื่อ และราคา ไม่แสดงจำนวนคงเหลือ ลูกค้ากดเลือกแล้วส่งรายการสั่งทาง LINE ได้</p></div>
-    <div class="row wrap"><button class="btn" onclick="downloadStorefront()">ดาวน์โหลดไฟล์หน้าร้าน</button><button class="btn pri" onclick="openStorefront()">เปิดให้ลูกค้าดู</button></div>
+    <div class="row wrap"><button class="btn" onclick="downloadStorefront()">ดาวน์โหลดไฟล์หน้าร้าน</button><button class="btn c-shop" onclick="openStorefront()">เปิดให้ลูกค้าดู</button></div>
   </div>
   <div class="g g-main">
     <div class="card" style="padding:0;overflow:hidden"><iframe class="sf-frame" id="sf-frame" title="ตัวอย่างหน้าร้าน"></iframe></div>
@@ -494,7 +521,7 @@ td.r,th.r{font-variant-numeric:tabular-nums}
 <section class="page" id="p-stock">
   <div class="ph">
     <div><h1>สต็อกสินค้า</h1><p id="stk-sub"></p></div>
-    <div class="row"><button class="btn" onclick="go('asst','buy')">รับของเข้าหลายรายการ</button><button class="btn pri" onclick="editProduct()"><svg class="i"><use href="#i-plus"/></svg>เพิ่มสินค้า</button></div>
+    <div class="row"><button class="btn" onclick="go('asst','buy')">รับของเข้าหลายรายการ</button><button class="btn c-buy" onclick="editProduct()"><svg class="i"><use href="#i-plus"/></svg>เพิ่มสินค้า</button></div>
   </div>
   <div class="g g4" id="stk-kpi"></div>
   <div class="card mt">
@@ -513,7 +540,7 @@ td.r,th.r{font-variant-numeric:tabular-nums}
 <section class="page" id="p-money">
   <div class="ph">
     <div><h1>รายรับ · รายจ่าย</h1><p>ทุกการเคลื่อนไหวของเงินอยู่ที่นี่</p></div>
-    <button class="btn pri" onclick="moneyEntry()"><svg class="i"><use href="#i-plus"/></svg>บันทึกรายการ</button>
+    <button class="btn c-exp" onclick="moneyEntry()"><svg class="i"><use href="#i-plus"/></svg>บันทึกรายการ</button>
   </div>
   <div class="g g4" id="m-bal"></div>
   <div class="card mt">
@@ -530,7 +557,7 @@ td.r,th.r{font-variant-numeric:tabular-nums}
 <section class="page" id="p-cust">
   <div class="ph">
     <div><h1>ลูกค้า</h1><p>ลูกค้าประจำ ลูกค้าขาจร และยอดค้างชำระ</p></div>
-    <button class="btn pri" onclick="editCustomer()"><svg class="i"><use href="#i-plus"/></svg>เพิ่มลูกค้าประจำ</button>
+    <button class="btn c-cust" onclick="editCustomer()"><svg class="i"><use href="#i-plus"/></svg>เพิ่มลูกค้าประจำ</button>
   </div>
   <div class="g g4" id="c-kpi"></div>
   <div class="card mt" id="c-suggest-card">
@@ -620,6 +647,7 @@ td.r,th.r{font-variant-numeric:tabular-nums}
   <symbol id="i-store" viewBox="0 0 24 24"><path d="M4 10v10h16V10M3 10l2-6h14l2 6M3 10c0 1.7 1.3 3 3 3s3-1.3 3-3c0 1.7 1.3 3 3 3s3-1.3 3-3c0 1.7 1.3 3 3 3s3-1.3 3-3M10 20v-5h4v5"/></symbol>
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
   <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12 20 4l-6 16-2.5-6.5z"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
   <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3"/></symbol>
 </svg>
 
@@ -888,10 +916,10 @@ function feedHTML(L){
 /* =========================================================
    ASSISTANT — PARSER
    ========================================================= */
-const UNITS='ชิ้น|แผง|ขวด|กล่อง|ถุง|แพ็ค|แพ็ก|แพค|ลัง|กก\\.?|กิโลกรัม|กิโล|kg|อัน|ซอง|ห่อ|โหล|กระป๋อง|ตัว|คู่|ใบ|เส้น|ม้วน|แกลลอน|ลิตร|ถัง|กระสอบ|มัด|หวี|ลูก|ฟอง|พวง|ก้อน|หลอด|แท่ง|ชุด|เครื่อง|กระปุก|ตลับ|ฝัก|หัว|กำ|ต้น|ช่อ|pcs|pc';
+const UNITS='ชิ้น|แผง|ขวด|กล่อง|ถุง|แพ็ค|แพ็ก|แพค|ลัง|กก\\.?|กิโลกรัม|กิโล|kg|อัน|ซอง|ห่อ|โหล|กระป๋อง|ตัว|คู่|ใบ|เส้น|ม้วน|แกลลอน|ลิตร|ถัง|กระสอบ|มัด|หวี|ลูก|ฟอง|พวง|ก้อน|หลอด|แท่ง|ชุด|เครื่อง|กระปุก|ตลับ|ฝัก|หัว|กำ|ต้น|ช่อ|โล|pcs|pc';
 const N='(\\d+(?:\\.\\d+)?)';
 const thaiDigits=s=>s.replace(/[๐-๙]/g,d=>'๐๑๒๓๔๕๖๗๘๙'.indexOf(d));
-const normUnit=u=>!u?'':/^(กก\.?|กิโล|กิโลกรัม|kg)$/i.test(u)?'กก.':/^(แพ็ก|แพค)$/.test(u)?'แพ็ค':/^pcs?$/i.test(u)?'ชิ้น':u;
+const normUnit=u=>!u?'':/^(กก\.?|กิโล|กิโลกรัม|โล|kg)$/i.test(u)?'กก.':/^(แพ็ก|แพค)$/.test(u)?'แพ็ค':/^pcs?$/i.test(u)?'ชิ้น':u;
 
 function parseLine(raw,mode){
   let s=thaiDigits(raw).replace(/(\d),(?=\d{3}(?!\d))/g,'$1').replace(/^\s*(?:[-*•·]|\d+[.)])\s+/,'').trim();
@@ -1020,19 +1048,133 @@ function saveChat(){chatLog=chatLog.slice(-40);try{localStorage.setItem(CHAT_KEY
 function say(html,undo){chatLog.push({html,undo:undo||null,ts:Date.now()});}
 function renderChat(){
   const el=$('chat');
-  el.innerHTML=(chatLog.length?chatLog:[{html:WELCOME}]).map((m,i)=>m.me?`<div class="msg me">${esc(m.text)}</div>`
+  el.innerHTML=(chatLog.length?chatLog:[{html:WELCOME}]).map((m,i)=>m.me?`<div class="msg me">${m.heard?`<div class="xs" style="opacity:.65;margin-bottom:4px">🎤 ได้ยินว่า: ${esc(m.heard)}</div>`:''}${esc(m.text)}</div>`
     :`<div class="msg bot${m.undone?' undone':''}">${m.html}${!m.undo?'':m.undone?'<div class="xs faint" style="margin-top:6px">ย้อนกลับแล้ว</div>'
     :`<div class="acts"><button class="btn sm" onclick="undoChat(${i})"><svg class="i"><use href="#i-undo"/></svg>ย้อนกลับ</button>${m.undo.kind==='purchase'||m.undo.kind==='sale'?`<button class="btn ghost sm" onclick="openEntry('${m.undo.kind}','${m.undo.id}')">ดูรายละเอียด</button>`:''}</div>`}</div>`).join('');
   el.scrollTop=el.scrollHeight;
 }
-function sendChat(text){
+function sendChat(text,heard){
   const box=$('a-text'),fromBox=text===undefined;
   text=String(fromBox?box.value:text).trim();if(!text)return;
-  chatLog.push({me:true,text,ts:Date.now()});
+  chatLog.push({me:true,text,heard:heard||undefined,ts:Date.now()});
   if(fromBox){box.value='';autoGrow();}
   try{handleChat(text);}catch(e){console.error(e);say('ขอโทษครับ เกิดข้อผิดพลาด: '+esc(e.message));}
   saveChat();renderPage();
 }
+/* ---------- สั่งด้วยเสียง ----------
+   เสียง → ข้อความ (ระบบรู้จำเสียงของเบราว์เซอร์, th-TH) → แปลงให้อ่านเหมือนพิมพ์เอง → ส่งเข้าแชต
+   ลำดับ: กันชื่อสินค้าที่มีอยู่ → คำตัวเลขไทยเป็นเลข → เว้นวรรคคำสำคัญ → ตัดเป็นรายการ → แก้ชื่อที่ฟังเพี้ยน */
+const TH_NUM={'ศูนย์':0,'หนึ่ง':1,'เอ็ด':1,'สอง':2,'ยี่':2,'สาม':3,'สี่':4,'ห้า':5,'หก':6,'เจ็ด':7,'แปด':8,'เก้า':9};
+const TH_MUL={'สิบ':10,'ร้อย':100,'พัน':1000,'หมื่น':1e4,'แสน':1e5};
+const TH_TOK='ศูนย์|หนึ่ง|เอ็ด|สอง|ยี่|สาม|สี่|ห้า|หก|เจ็ด|แปด|เก้า|สิบ|ร้อย|พัน|หมื่น|แสน|ล้าน';
+const TH_DIG=Object.keys(TH_NUM).join('|');
+function thaiWordsToNum(w){
+  let total=0,pend=0;
+  (w.match(new RegExp(TH_TOK,'g'))||[]).forEach(t=>{
+    if(t in TH_NUM)pend=TH_NUM[t];
+    else if(t==='ล้าน'){total=(total+pend)*1e6;pend=0;}
+    else{total+=(pend||1)*TH_MUL[t];pend=0;}
+  });
+  return total+pend;
+}
+// แปลงเฉพาะคำตัวเลขที่ตามด้วยหน่วย/คำสำคัญ/ช่องว่าง จะได้ไม่แปลง "เก้าอี้" หรือ "ห้าง"
+const thaiNumbers=s=>s.replace(new RegExp(String.raw`(?:${TH_TOK})+(?:\s*จุด\s*(?:${TH_DIG})+)?(?=\s|$|\d|ครึ่ง|${UNITS}|${VOICE_KW}|และ|แล้ว|กับ)`,'g'),m=>{
+  const [a,b]=m.split(/\s*จุด\s*/);let v=String(thaiWordsToNum(a));
+  if(b)v+='.'+(b.match(new RegExp(TH_DIG,'g'))||[]).map(x=>TH_NUM[x]).join('');
+  return ' '+v+' ';
+});
+function lev(a,b){
+  if(!a.length||!b.length)return Math.max(a.length,b.length);
+  let p=Array.from({length:b.length+1},(_,j)=>j);
+  for(let i=1;i<=a.length;i++){const c=[i];for(let j=1;j<=b.length;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c;}
+  return p[b.length];
+}
+function closestProduct(name,min){
+  const n=normName(name);let best=null,bs=0;
+  db.products.forEach(p=>{const pn=normName(p.name),s=1-lev(n,pn)/Math.max(n.length,pn.length);if(s>bs){bs=s;best=p;}});
+  return bs>=min?best:null;
+}
+const VOICE_KW='ต้นทุน|ทุน|ราคาขาย|ขาย|ราคา|บาท|ซื้อ|โอน|เงินสด|ค้างไว้|ค้างจ่าย|ติดไว้|จาก|ให้|ลูกค้า|จำนวน';
+const VOICE_JOIN=/(?:^|\s)(?:และ|แล้วก็|กับ|ต่อด้วย|ถัดไป|อีกอย่าง|ต่อไป)(?=\s|$)/g;
+const reEsc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+function protectNames(s,keep){
+  [...db.products].sort((a,b)=>b.name.length-a.name.length).forEach(p=>{
+    const chars=[...p.name.replace(/\s+/g,'')];if(chars.length<2)return;
+    // ตัวแทนชื่อใช้อักขระพิเศษ (ไม่ใช่ตัวเลข) ไม่ให้ขั้นแปลงตัวเลขไปแตะ
+    s=s.replace(new RegExp(chars.map(reEsc).join('\\s*'),'gi'),()=>{keep.push(p.name);return ` \u0001${String.fromCharCode(0xE000+keep.length-1)}\u0002 `;});
+  });
+  return s;
+}
+function voiceToText(raw){
+  // "ขาย 90" อาจเป็นราคาขายตอนซื้อเข้า จึงดูคำแรก หรือคำว่า "ทุน" (มีเฉพาะตอนซื้อ)
+  const mode=/^\s*(?:ซื้อ|รับของ)/.test(raw)||/ทุน/.test(raw)?'buy':/^\s*(?:ขาย|ลูกค้าซื้อ)/.test(raw)?'sell':segVal('a-mode');
+  const keep=[],isNum=t=>/^\d+(?:\.\d+)?$/.test(t),unitRe=new RegExp('^(?:'+UNITS+')$'),kwRe=new RegExp('^(?:'+VOICE_KW+')$');
+  let s=protectNames(' '+thaiDigits(raw).replace(/(\d),(?=\d{3}(?!\d))/g,'$1').replace(/[,，]/g,' และ ')+' ',keep); // 1,200 → 1200 ก่อน แล้วค่อยใช้คอมมาแยกรายการ
+  s=thaiNumbers(s);
+  s=s.replace(new RegExp('(\\d+(?:\\.\\d+)?)\\s*('+UNITS+')\\s*ครึ่ง','g'),(m,n,u)=>` ${+n+0.5} ${u} `).replace(new RegExp('ครึ่ง\\s*('+UNITS+')','g'),' 0.5 $1 ');
+  s=s.replace(/(\d+(?:\.\d+)?)/g,' $1 ').replace(new RegExp('('+VOICE_KW+')','g'),' $1 ').replace(new RegExp('(\\d)\\s*('+UNITS+')(?=\\s|$)','g'),'$1 $2 ');
+  const lines=[];
+  s.replace(VOICE_JOIN,'\n').split('\n').forEach(part=>{
+    let line=[],hasNum=false,prevVal=false;
+    part.split(/\s+/).filter(Boolean).forEach(tok=>{
+      const word=!isNum(tok)&&!kwRe.test(tok)&&!unitRe.test(tok);
+      if(word&&hasNum&&prevVal){lines.push(line);line=[];hasNum=false;} // เจอชื่อใหม่หลังตัวเลข = รายการใหม่
+      line.push(tok);if(isNum(tok))hasNum=true;
+      prevVal=isNum(tok)||unitRe.test(tok)||/^(?:บาท|โอน|เงินสด|ค้างไว้|ค้างจ่าย|ติดไว้)$/.test(tok);
+    });
+    if(line.length)lines.push(line);
+  });
+  // หัวรายการ "ซื้อจาก X" / "ขายให้ X": ตัดออกเป็นบรรทัดแรก ก่อนชื่อสินค้าตัวแรก
+  const f=lines[0]||[],hi=f.findIndex(t=>/^(?:จาก|ให้|ลูกค้า)$/.test(t));
+  if(hi>=0&&!f.slice(0,hi).some(isNum)){
+    let cut=f.findIndex((t,i)=>i>hi+1&&t.startsWith('\u0001'));
+    if(cut<0){const n=f.findIndex((t,i)=>i>hi+1&&isNum(t));if(n>hi+2)cut=n-1;}
+    if(cut>0)lines.splice(0,1,f.slice(0,cut),f.slice(cut));
+  }
+  return lines.map(toks=>{
+    let t=toks.join(' ').replace(/\u0001([-])\u0002/g,(m,c)=>keep[c.charCodeAt(0)-0xE000]);
+    // ชื่อที่ไม่ตรงสินค้าใดเลย → เทียบกับชื่อในสต็อกที่ใกล้ที่สุด (ขาย 60%, ซื้อเข้า 80% เพราะอาจเป็นของใหม่จริง)
+    const m=t.match(/^((?:ซื้อ|ขาย)\s+)?(.+?)\s+(\d[\s\S]*)$/);
+    if(m&&!/^(?:จาก|ให้|ลูกค้า|ทุน|ต้นทุน|ราคา|จ่าย)/.test(m[2])&&!db.products.some(p=>normName(p.name)===normName(m[2]))){
+      const p=closestProduct(m[2],mode==='buy'?0.8:0.6);if(p)t=(m[1]||'')+p.name+' '+m[3];
+    }
+    return t.replace(/\s{2,}/g,' ').trim();
+  }).filter(Boolean).join('\n');
+}
+// ถ้าเบราว์เซอร์ให้คำที่ฟังได้หลายแบบ เลือกแบบที่ตรงกับสินค้าในร้าน/คำสั่งมากที่สุด
+function pickAlt(res){
+  let best=res[0].transcript,bs=-1;
+  const names=db.products.map(p=>normName(p.name)).filter(n=>n.length>=2); // เทียบแบบไม่ใช้ regex ประหยัดเครื่อง
+  for(let i=0;i<res.length;i++){const t=res[i].transcript,nt=normName(t);const sc=names.filter(n=>nt.includes(n)).length*3+(new RegExp(VOICE_KW).test(t)?1:0)+(/\d|สิบ|ร้อย/.test(t)?1:0)+(res[i].confidence||0);if(sc>bs){bs=sc;best=t;}}
+  return best;
+}
+let rec=null,recFinal=[],recIdle=null;
+function setMicUI(on){
+  const b=$('mic-btn');if(b)b.classList.toggle('rec',on);
+  $('a-text').placeholder=on?'กำลังฟัง… พูดได้เลย แตะไมค์อีกครั้งเพื่อจบ':'พิมพ์หรือวางรายการ… (Ctrl+Enter = ส่ง)';
+}
+function toggleMic(){
+  if(rec){rec.stop();return;}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){toast('เบราว์เซอร์นี้สั่งด้วยเสียงไม่ได้ — ใช้ Chrome (Android/คอม) หรือ Safari (iPhone)');return;}
+  rec=new SR();rec.lang='th-TH';rec.interimResults=true;rec.continuous=true;rec.maxAlternatives=5;recFinal=[];
+  const box=$('a-text'),before=box.value.trim();
+  rec.onresult=e=>{
+    let interim='';
+    for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i];if(r.isFinal)recFinal.push(pickAlt(r));else interim+=r[0].transcript;}
+    box.value=[before,recFinal.join(' '),interim].filter(Boolean).join(' ');autoGrow();
+    clearTimeout(recIdle);recIdle=setTimeout(()=>rec&&rec.stop(),2500); // เงียบ 2.5 วิ = จบประโยค
+  };
+  rec.onerror=e=>{toast(e.error==='not-allowed'||e.error==='service-not-allowed'?'ยังไม่ได้อนุญาตไมโครโฟน — กดอนุญาตในเบราว์เซอร์แล้วลองใหม่':e.error==='no-speech'?'ไม่ได้ยินเสียง ลองพูดใหม่อีกครั้ง':'ฟังไม่สำเร็จ ('+e.error+')');};
+  rec.onend=()=>{
+    clearTimeout(recIdle);rec=null;setMicUI(false);
+    const heard=recFinal.join(' ').trim();if(!heard)return;
+    box.value='';autoGrow(); // ข้อความที่พิมพ์ไว้ก่อนพูดถูกส่งรวมไปด้วยแล้ว
+    sendChat([before,voiceToText(heard)].filter(Boolean).join('\n'),heard);
+  };
+  try{rec.start();setMicUI(true);}catch(e){rec=null;toast('เปิดไมโครโฟนไม่ได้');}
+}
+
 const Q_RE=/เท่าไหร่|เท่าไร|ไหม|มั้ย|อะไร|ใคร|ยังไง|อย่างไร|กี่|\?|สรุป|เช็ค|เช็ก|ดูยอด/;
 const BUY_RE=/^(?:ซื้อ(?:ของ|สินค้า)?(?:เข้า)?|รับ(?:ของ|สินค้า)(?:เข้า)?|ของเข้า|สั่งของเข้า|เติมสต็อก|เติมสต๊อก|เติมของ)\s*/;
 const SELL_RE=/^(?:ขาย(?:ของ|สินค้า)?(?:ออก)?|ลูกค้าซื้อ)\s*/;
@@ -1040,7 +1182,7 @@ function handleChat(text){
   const t=thaiDigits(text).trim(),lines=t.split(/\r?\n/).map(s=>s.trim()).filter(Boolean),one=lines.length===1;let m;
   if(one&&(m=t.match(/^(?:ตั้ง|แก้|เปลี่ยน)?\s*ราคา(?:ขาย)?\s+(.+?)\s+(\d+(?:\.\d+)?)\s*(?:บาท)?$/)))return setField(m[1],'retailPrice',+m[2],'ราคาขาย');
   if(one&&(m=t.match(/^(?:ตั้ง|แก้|เปลี่ยน)?\s*(?:ต้นทุน|ทุน)\s+(.+?)\s+(\d+(?:\.\d+)?)\s*(?:บาท)?$/)))return setField(m[1],'cost',+m[2],'ต้นทุน');
-  const looksLikeItem=BUY_RE.test(t)||SELL_RE.test(t)||/(?:ทุน|ขาย|ราคา|@|x)\s*\d/i.test(t);
+  const looksLikeItem=((BUY_RE.test(t)||SELL_RE.test(t))&&/\d/.test(t))||/(?:ทุน|ขาย|ราคา|@|x)\s*\d/i.test(t); // "ขายได้เท่าไหร่" = คำถาม
   if(one&&!looksLikeItem&&(Q_RE.test(t)||/^(ช่วย|help|ทำอะไรได้)/i.test(t)))return say(answer(t));
   if(one&&/^(?:จ่าย|ค่า)/.test(t)&&!/^จ่ายหนี้/.test(t)&&/\d/.test(t))return chatExpense(t);
   let mode=segVal('a-mode'),first=lines[0];
@@ -1163,10 +1305,10 @@ function renderConfirm(){
   $('a-confirm').innerHTML=buy
     ?`<div class="fld"><label>ซื้อจาก (ไม่บังคับ)</label><input class="inp" id="a-sup" value="${esc(aSup)}" placeholder="เช่น ตลาดไท, แม็คโคร"></div>
       <div class="fld"><label>จ่ายด้วย</label><div class="seg full" id="a-pay"><button class="on" data-v="cash">เงินสด</button><button data-v="transfer">โอน</button><button data-v="credit">ค้างจ่าย</button></div></div>
-      <button class="btn acc lg" style="grid-column:1/-1" onclick="commitBuy()">บันทึกรับของเข้าและอัปเดตสต็อก</button>`
+      <button class="btn c-buy lg" style="grid-column:1/-1" onclick="commitBuy()">บันทึกรับของเข้าและอัปเดตสต็อก</button>`
     :`<div class="fld"><label>ลูกค้า (เว้นว่าง = ขาจร)</label><input class="inp" id="a-cust" list="a-cust-dl" value="${esc(aCustomer)}" placeholder="ชื่อลูกค้าประจำ"><datalist id="a-cust-dl">${custOpts}</datalist></div>
       <div class="fld"><label>รับเงินด้วย</label><div class="seg full" id="a-pay"><button class="on" data-v="cash">เงินสด</button><button data-v="transfer">โอน</button><button data-v="credit">ค้างจ่าย</button></div></div>
-      <button class="btn acc lg" style="grid-column:1/-1" onclick="commitSell()">บันทึกการขายและตัดสต็อก</button>`;
+      <button class="btn c-sell lg" style="grid-column:1/-1" onclick="commitSell()">บันทึกการขายและตัดสต็อก</button>`;
   segBind('a-pay',()=>{});segSet('a-pay',aPay);
 }
 /* ซื้อเข้า: สินค้าที่ยังไม่มีจะถูกสร้างให้อัตโนมัติ สินค้าเดิมคิดต้นทุนเฉลี่ยใหม่ */
@@ -1480,8 +1622,9 @@ function cycleTheme(){const t=applyTheme(),dark=t==='dark'||(t==='auto'&&matchMe
 function renderSet(){$('s-name').value=db.settings.shopName;segSet('s-theme',applyTheme());populateGHForm();}
 function saveShop(){db.settings.shopName=$('s-name').value.trim()||'ร้านของฉัน';save();applyShop();toast('บันทึกแล้ว');}
 function exportJSON(){const b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=`backoffice-${iso(Date.now())}.json`;a.click();URL.revokeObjectURL(u);}
-function importJSON(ev){const f=ev.target.files?.[0];ev.target.value='';if(!f)return;if(!confirm('Import จะแทนที่ข้อมูลทั้งหมดในเครื่องนี้ แน่ใจไหม?'))return;const r=new FileReader();r.onload=e=>{try{const p=JSON.parse(e.target.result);if(!p||typeof p!=='object')throw 0;db=Object.assign({cash:0,transfer:0,credit:0,payable:0},p);normalize();save();applyShop();toast('Import สำเร็จ');go('dash');}catch(err){toast('ไฟล์ไม่ถูกต้อง');}};r.readAsText(f);}
-function wipeAll(){if(!confirm('ล้างข้อมูลทั้งหมด? ควร Export สำรองก่อน'))return;if(prompt('พิมพ์คำว่า ล้าง เพื่อยืนยัน')!=='ล้าง')return;db={cash:0,transfer:0,credit:0,payable:0,products:[],bills:[],transactions:[],customers:[],recurring:[],settings:{shopName:db.settings.shopName}};save();go('dash');}
+function importJSON(ev){const f=ev.target.files?.[0];ev.target.value='';if(!f)return;if(!confirm('Import จะแทนที่ข้อมูลทั้งหมดในเครื่องนี้ แน่ใจไหม?'+syncWarn()))return;const r=new FileReader();r.onload=e=>{try{const p=JSON.parse(e.target.result);if(!p||typeof p!=='object')throw 0;db=Object.assign({cash:0,transfer:0,credit:0,payable:0},p);normalize();save();applyShop();toast('Import สำเร็จ');go('dash');}catch(err){toast('ไฟล์ไม่ถูกต้อง');}};r.readAsText(f);}
+const syncWarn=()=>gh?'\n\nเชื่อม GitHub อยู่: ข้อมูลในทุกเครื่องจะเปลี่ยนตามด้วย':'';
+function wipeAll(){if(!confirm('ล้างข้อมูลทั้งหมด? ควร Export สำรองก่อน'+syncWarn()))return;if(prompt('พิมพ์คำว่า ล้าง เพื่อยืนยัน')!=='ล้าง')return;db={cash:0,transfer:0,credit:0,payable:0,products:[],bills:[],transactions:[],customers:[],recurring:[],settings:{shopName:db.settings.shopName}};save();go('dash');}
 
 /* =========================================================
    GITHUB SYNC — ข้อมูลส่วนกลางเก็บเป็นไฟล์ data.json ใน repo ส่วนตัว

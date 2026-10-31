@@ -1,6 +1,6 @@
 // ให้แอปเปิดได้แม้ไม่มีเน็ต: ดึงไฟล์ใหม่จากเน็ตก่อน ถ้าไม่ได้ใช้ของที่เก็บไว้
 // (ไม่ยุ่งกับการเรียก api.github.com — การซิงค์ข้อมูลยังไปตรงเสมอ)
-const CACHE = 'backoffice-v1';
+const CACHE = 'backoffice-v2';
 const CORE = ['./', './ระบบหลังร้าน.html', './manifest.webmanifest', './icon.svg', './icon-192.png'];
 self.addEventListener('install', e => { self.skipWaiting(); e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).catch(() => {})); });
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
